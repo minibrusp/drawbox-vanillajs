@@ -74,14 +74,14 @@ const displayState = () => {
 }
 
 // resize canvas
-function canvasResizer(x) {
+const canvasResizer = (x) => {
   if (x.matches) { // If screensize is less then 500px
-    state.canvas.width = canvas.offsetWidth;
-    state.canvas.height = canvas.offsetWidth;
-     ctx_canvas.fillStyle = "white";
-     ctx_canvas.fillRect(0, 0, canvas.width, canvas.height);
-     state.ctx_canvas.putImageData(state.restore_array[state.start_index], 0, 0)
-     console.log("resizing canvas");
+    state.canvas.width = canvas.offsetWidth
+    state.canvas.height = canvas.offsetWidth
+     ctx_canvas.fillStyle = "white"
+     ctx_canvas.fillRect(0, 0, canvas.width, canvas.height)
+     state.start_index != -1 && state.ctx_canvas.putImageData(state.restore_array[state.start_index], 0, 0)
+     
   }
 }
 
@@ -111,10 +111,10 @@ const downloadCanvas = () => {
 }
 
 function keyPressHandler(e) {
-  var eventOBJ = window.E ? window.E : e;
+  var eventOBJ = window.E ? window.E : e
 
   if (eventOBJ.ctrlKey && eventOBJ.keyCode == 90) {
-      Undo(e);
+      Undo(e)
   }
 }
 
@@ -127,9 +127,9 @@ opacityLevelSlider.addEventListener('input', (e) => setBrush(e), false)
 brushTypeDropDown.addEventListener('input', (e) => setBrush(e), false)
 lineCapDropDown.addEventListener('input', (e) => setBrush(e), false)
 
-canvas.addEventListener("touchstart", start, { passive: false });
-canvas.addEventListener("touchmove", draw, { passive: false });
-canvas.addEventListener("touchend", stop, { passive: false });
+canvas.addEventListener("touchstart", start, { passive: false })
+canvas.addEventListener("touchmove", draw, { passive: false })
+canvas.addEventListener("touchend", stop, { passive: false })
 
 canvas.addEventListener('mousedown',(e) => start(e), false)
 canvas.addEventListener('mousemove',(e) => draw(e), false)
@@ -142,7 +142,7 @@ undoButton.addEventListener('click', (e) => Undo(e), false)
 clearButton.addEventListener('click', (e) => Clear(e), false)
 downloadButton.addEventListener('click', downloadCanvas, false)
 
-window.addEventListener('keydown', (e) => keyPressHandler(e));
+window.addEventListener('keydown', (e) => keyPressHandler(e))
 
 media_screen.addEventListener("change", () => canvasResizer(media_screen), false)
 
