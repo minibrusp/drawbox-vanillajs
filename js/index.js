@@ -13,6 +13,7 @@ const undoButton = document.getElementById('undobutton')
 const clearButton = document.getElementById('clearbutton')
 const downloadButton = document.getElementById('downloadbutton')
 
+
 // Default States 
 let stroke_color = '#000000'
 let current_palette = 'Basic'
@@ -25,6 +26,7 @@ let line_cap = 'round'
 let canvas = document.getElementById('drawboxcanvas')
 let ctx_canvas = canvas.getContext('2d')
 let pen_canvas = document.createElement('canvas')
+const media_screen = window.matchMedia("(max-width: 499px)")
 let cursor_url = null
 let is_moving = false
 let is_drawing = false
@@ -52,7 +54,7 @@ let state = {
   position: position,
   restore_array: restore_array,
   start_index: start_index,
-  name: name
+  name: name,
 }
 
 
@@ -71,7 +73,20 @@ const displayState = () => {
   console.log("**********")
 }
 
+// resize canvas
+function canvasResizer(x) {
+  if (x.matches) { // If screensize is less then 500px
+    state.canvas.width = canvas.offsetWidth;
+    state.canvas.height = canvas.offsetWidth;
+     ctx_canvas.fillStyle = "white";
+     ctx_canvas.fillRect(0, 0, canvas.width, canvas.height);
+     state.ctx_canvas.putImageData(state.restore_array[state.start_index], 0, 0)
+     console.log("resizing canvas");
+  }
+}
+
 const canvasInit = () => {
+  canvasResizer(media_screen);
   state.ctx_canvas.fillStyle = '#ffffff'
   state.ctx_canvas.fillRect(0, 0, state.canvas.width, state.canvas.height)  //x, y, width, height
   updateBrushStyle() 
@@ -112,6 +127,10 @@ opacityLevelSlider.addEventListener('input', (e) => setBrush(e), false)
 brushTypeDropDown.addEventListener('input', (e) => setBrush(e), false)
 lineCapDropDown.addEventListener('input', (e) => setBrush(e), false)
 
+canvas.addEventListener("touchstart", start, { passive: false });
+canvas.addEventListener("touchmove", draw, { passive: false });
+canvas.addEventListener("touchend", stop, { passive: false });
+
 canvas.addEventListener('mousedown',(e) => start(e), false)
 canvas.addEventListener('mousemove',(e) => draw(e), false)
 canvas.addEventListener('mouseup',(e) => stop(e), false)
@@ -124,6 +143,8 @@ clearButton.addEventListener('click', (e) => Clear(e), false)
 downloadButton.addEventListener('click', downloadCanvas, false)
 
 window.addEventListener('keydown', (e) => keyPressHandler(e));
+
+media_screen.addEventListener("change", () => canvasResizer(media_screen), false)
 
 
 
