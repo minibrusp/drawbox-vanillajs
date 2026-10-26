@@ -24,3 +24,38 @@ body {
   flex-wrap: wrap;
 }
 
+
+/* gallery  */
+#gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px auto;
+}
+
+#gallery img {
+  display: block;
+  width: 100%;
+}
+
+.gallery-img-container {
+  padding: 10px;
+  border: 2px double #305b8b;
+  max-width: 300px;
+}
+
+.gallery-txt-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5px;
+  background-color: #413939;
+}
+
+#gallery p {
+  display: block;
+  text-align: center;
+  color: antiquewhite;
+  margin: 2.5px 5px;
+}
+

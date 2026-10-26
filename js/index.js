@@ -1,5 +1,7 @@
 import { colorPalettes, setColor, createPalette, displayPalette } from './canvas-colors.js'
 import { setBrush, updateBrushStyle, start, draw, stop, Undo, Clear } from './canvas-brush.js'
+import { handleCanvasSubmit, initGallery } from './canvas-gallery.js'
+import filnameFormatter from './utils/filname-formatter.js'
 
 // DOMS
 const colorPickerInput = document.getElementById('colorpicker')
@@ -12,6 +14,7 @@ const nametextInput = document.getElementById('name')
 const undoButton = document.getElementById('undobutton')
 const clearButton = document.getElementById('clearbutton')
 const downloadButton = document.getElementById('downloadbutton')
+const submitButton = document.getElementById('submitbutton')
 
 
 // Default States 
@@ -34,6 +37,7 @@ const position = { x: 0, y: 0 }
 let restore_array = [] 
 let start_index = -1
 let name = 'anonymous'
+let gallery_items = []
 
 
 let state = {
@@ -55,6 +59,7 @@ let state = {
   restore_array: restore_array,
   start_index: start_index,
   name: name,
+  gallery_items: gallery_items
 }
 
 
@@ -93,14 +98,9 @@ const canvasInit = () => {
 }
 
 const downloadCanvas = () => {
-  nametextInput.value && (state.name = nametextInput.value)
+  nametextInput.value && (state.name = nametextInput.value.replaceAll(' ', '&'))
   const link = document.createElement('a')
-  const timestamp = Date.now()
-  const date = new Date(timestamp)
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getUTCDate()
-  const fileNameFormatted = `${state.name}-${month}-${day}-${year}.png`
+  const fileNameFormatted = filnameFormatter(state.name)
 
   link.href = state.canvas.toDataURL('image/png')
   link.download = fileNameFormatted
@@ -138,9 +138,16 @@ canvas.addEventListener('mouseout',(e) => stop(e), false)
 
 document.querySelector('fieldset').addEventListener('oninput', (e) => updateBrushStyle(e), false)
 
+nametextInput.addEventListener('change', (e) => {
+  state.name = e.target.value != '' ? e.target.value.replaceAll(" ", "%20") : 'anonymous'
+
+})
+
 undoButton.addEventListener('click', (e) => Undo(e), false)
 clearButton.addEventListener('click', (e) => Clear(e), false)
 downloadButton.addEventListener('click', downloadCanvas, false)
+submitButton.addEventListener('click', (e) => handleCanvasSubmit(e), false)
+
 
 window.addEventListener('keydown', (e) => keyPressHandler(e))
 
@@ -151,5 +158,6 @@ media_screen.addEventListener("change", () => canvasResizer(media_screen), false
 // ### init 
 createPalette()
 canvasInit()
+initGallery()
 
 export { displayState, state }
